@@ -1,44 +1,34 @@
-from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from .serializers import UserSerializer, DriverSerializer, TripSerializer
-from .models import User, Driver, Trip
+from rest_framework import generics, permissions, viewsets
+from .serializers import SignupSerializer, DriverSerializer
+from .models import User, Driver
+
+class SignupView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = SignupSerializer
+    permission_classes = [permissions.AllowAny]
 
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = SignupSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-    # Anyone can create a new user, but other operations require authentication
-    def get_permissions(self):
-        if self.action == 'create':
-            return [AllowAny()]
-        return [IsAuthenticated()]
-    
-
-    # Hash password before saving
-    def perform_create(self, serializer):
-        serializer.save()
-
+    # Optional: restrict to own profile
+    def get_queryset(self):
+        return self.queryset.filter(uid=self.request.user.uid)
 
 class DriverViewSet(viewsets.ModelViewSet):
     queryset = Driver.objects.all()
     serializer_class = DriverSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
-    # Bind driver to the authenticated user
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-
-
-class TripViewSet(viewsets.ModelViewSet):
-    queryset = Trip.objects.all()
-    serializer_class = TripSerializer
-    permission_classes = [IsAuthenticated]
-
-    # Filter queryset to show only the user's own trips
+    # Optional: restrict to own profile
     def get_queryset(self):
-        return Trip.objects.filter(user=self.request.user)
-
-    # Bind trip to the authenticated user
+        if self.request.user.is_authenticated:
+            return self.queryset.filter(user=self.request.user)
+        return self.queryset.none()
+    
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+

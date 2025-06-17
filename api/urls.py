@@ -1,12 +1,15 @@
 from rest_framework.routers import DefaultRouter
 from django.urls import path, include
-from .views import UserViewSet, DriverViewSet, TripViewSet
+from .views import UserViewSet,SignupView, DriverViewSet
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
-router.register(r'drivers', DriverViewSet)
-router.register(r'trips', TripViewSet)
+router.register(r'drivers', DriverViewSet) 
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('signup/', SignupView.as_view(), name='signup'),  # Signup
+    path('login/', TokenObtainPairView.as_view(), name='login'),  # Login
+    path('refresh/', TokenRefreshView.as_view(), name='refresh'),  # Refresh
 ]

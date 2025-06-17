@@ -1,5 +1,4 @@
-from django.contrib.auth.models import BaseUserManager
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django.db import models
 
 class UserManager(BaseUserManager):
