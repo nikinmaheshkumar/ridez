@@ -30,4 +30,15 @@ class DriverSerializer(serializers.ModelSerializer):
         model = Driver
         fields = ['user', 'car_model', 'car_number', 'car_type', 'license_number', 'is_active', 'created_at']
         read_only_fields = ['user', 'created_at']
-        
+    
+class TripSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Trip
+        fields = ['user', 'driver', 'booking_code', 'pickup_location',
+                   'pickup_lat', 'pickup_lng',
+                   'drop_location', 'drop_lat', 'drop_lng',
+                   'distance', 'est_duration', 'fare',
+                   'status', 'start_time', 'completed_time',
+                   'actual_duration', 'created_at']
+
+        read_only_fields = ['user', 'driver', 'created_at', 'start_time', 'completed_time', 'actual_duration']
