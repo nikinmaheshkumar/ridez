@@ -5,6 +5,8 @@ from django.utils import timezone
 from .serializers import SignupSerializer, DriverSerializer, TripSerializer
 from .models import User, Driver,Trip
 from rest_framework.exceptions import ValidationError
+from rest_framework_simplejwt.views import TokenObtainPairView
+from .serializers import CustomTokenObtainPairSerializer
 
 class SignupView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -99,3 +101,6 @@ class TripViewSet(viewsets.ModelViewSet):
             trip.save()
             return Response({'status': 'Trip canceled'})
         return Response({'status': 'Unable to cancel'},status=400)
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer

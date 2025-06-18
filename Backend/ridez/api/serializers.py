@@ -1,5 +1,8 @@
 from rest_framework import serializers
 from .models import User, Driver, Trip
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework import serializers
+from .models import User
 
 class SignupSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True)
@@ -42,3 +45,40 @@ class TripSerializer(serializers.ModelSerializer):
                    'actual_duration', 'created_at']
 
         read_only_fields = ['user', 'driver', 'created_at', 'start_time', 'completed_time', 'actual_duration']
+
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    number = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, attrs):
+        number = attrs.get("number")
+        password = attrs.get("password")
+        try:
+            user = User.objects.get(number=number)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("No user with this phone number.")
+
+        if not user.check_password(password):
+            raise serializers.ValidationError("Incorrect password.")
+
+        if not user.is_active:
+            raise serializers.ValidationError("User account is disabled.")
+        refresh = self.get_token(user)
+        return {
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+            'user': {
+                'name': user.name,
+                'number': user.number,
+                'email': user.email,
+                'is_driver': hasattr(user, 'driver')
+            }
+        }
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['name'] = user.name
+        token['number'] = user.number
+        token['is_driver'] = hasattr(user, 'driver')
+        return token

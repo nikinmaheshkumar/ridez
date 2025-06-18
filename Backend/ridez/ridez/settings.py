@@ -156,5 +156,4 @@ CORS_ALLOW_ALL_ORIGINS = True
 # or, if you want to be more restrictive:
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
-    "http://your-frontend.example.com",
 ]

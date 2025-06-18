@@ -1,0 +1,15 @@
+# Core
+Django>=4.2
+djangorestframework>=3.14.0
+
+# PostgreSQL support
+psycopg2-binary>=2.9.6
+
+# CORS support
+django-cors-headers>=4.0.0
+
+# Optional (if using environment variables)
+python-decouple>=3.8
+
+# Optional (if using JWT authentication)
+djangorestframework-simplejwt>=5.3.1
