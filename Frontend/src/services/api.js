@@ -1,7 +1,4 @@
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-
-const nav = useNavigate();
 const api = axios.create({
   baseURL: "http://127.0.0.1:8000/api",
 });
@@ -32,7 +29,7 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (refreshError) {
         localStorage.clear();
-        nav("/");
+        window.location.href = "/";
       }
     }
 
