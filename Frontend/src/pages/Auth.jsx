@@ -15,7 +15,7 @@ export default function AuthPage() {
           <button onClick={() => setMode("login")} className={`rounded-lg basis-1/2 text-white text-lg h-12 transition ${isLogin ? "bg-black" : "bg-[#0f0f86]" }`}>Login</button>
           <button onClick={() => setMode("register")} className={`rounded-lg basis-1/2 text-white text-lg h-12 transition ${isRegister ? "bg-black" : "bg-[#0f0f86]" }`}>Register</button>
         </div>
-        {mode === "login" ? <LoginForm /> : <RegisterForm />}
+        {mode === "login" ? <LoginForm /> : <RegisterForm setMode={setMode}/>}
       </div>
     </div>
   );

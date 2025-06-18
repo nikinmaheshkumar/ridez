@@ -1,19 +1,47 @@
 import { useState } from "react";
 import { FaMobileAlt } from "react-icons/fa";
 import { TbLockPassword } from "react-icons/tb";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginForm() {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
-
-  const handleLogin = (e) => {
+  const navigate = useNavigate();
+  const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("Login attempted with:", {
-      phone,
-      password,
-    });
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/api/login/", {
+        number: phone,
+        password: password
+      }, {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+      console.log("Login success:", response.data);
+      localStorage.setItem("access", response.data.access);
+      localStorage.setItem("refresh", response.data.refresh);
+      const isDriver = response.data.user.is_driver;
+      if (isDriver) {
+        navigate("/driver");
+      } else {
+        navigate("/user");
+      }
+
+    } catch (error) {
+      if (error.response) {
+        console.error("Login failed:", error.response.data);
+        alert("Login failed: " + error.response.data.detail || "An error occurred");
+      } else {
+        console.error("Error:", error.message);
+        alert("An error occurred: " + error.message);
+      }
+    }
     e.target.reset();
   };
+
+
 
   return (
     <form
