@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { FaMobileAlt } from "react-icons/fa";
 import { TbLockPassword } from "react-icons/tb";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import api from "../services/api";
 
 export default function LoginForm() {
   const [phone, setPhone] = useState("");
@@ -11,7 +11,7 @@ export default function LoginForm() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/login/", {
+      const response = await api.post("/login/", {
         number: phone,
         password: password
       }, {

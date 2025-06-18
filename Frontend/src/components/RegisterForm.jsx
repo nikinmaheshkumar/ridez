@@ -3,7 +3,7 @@ import { FaMobileAlt } from "react-icons/fa";
 import { TbLockPassword } from "react-icons/tb";
 import { FaRegUser } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
-import axios from "axios";
+import api from "../services/api";
 export default function RegisterForm({ setMode }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -13,7 +13,7 @@ export default function RegisterForm({ setMode }) {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/signup/", {
+      const response = await api.post("/signup/", {
         number: phone,
         email: email,
         name: name,
