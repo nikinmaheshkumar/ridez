@@ -1,18 +1,15 @@
 import { useState } from 'react';
-import { Menu, X, User, History, LayoutDashboard, LogOut, CirclePlus } from 'lucide-react';
+import { Menu, X, History, LayoutDashboard, LogOut, CirclePlus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 function UserNav() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const navigate = useNavigate();
     const handleDash = () => {
-        navigate('/driver')
-    }
-    const handleProf = () => {
-        navigate('/driver')
+        navigate('/user')
     }
     const handleHist = () => {
-        navigate('/driver')
+        navigate('/history')
     }
     const handleDriv = () => {
         navigate('/driver')
@@ -24,7 +21,6 @@ function UserNav() {
 
     const navItems = [
         { name: 'Dashboard', icon: LayoutDashboard, handle: handleDash },
-        { name: 'Profile', icon: User, handle: handleProf },
         { name: 'History', icon: History, handle: handleHist },
         { name: 'Join as Driver', icon: CirclePlus, handle: handleDriv },
     ];
@@ -93,7 +89,7 @@ function UserNav() {
                                     <button
                                         key={item.name}
                                         className="text-[#068fff] block px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 w-full text-left flex items-center space-x-3"
-                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        onClick={item.handle}
                                     >
                                         <IconComponent size={20} />
                                         <span>{item.name}</span>
