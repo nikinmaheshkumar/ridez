@@ -56,7 +56,7 @@ function UserNav() {
                     </div>
                     <div className="hidden md:block">
                         <button
-                            class="group flex items-center justify-start w-11 h-11 bg-red-600 rounded-full cursor-pointer relative overflow-hidden transition-all duration-200 shadow-lg hover:w-32 hover:rounded-lg active:translate-x-1 active:translate-y-1" onClick={logout}
+                            className="group flex items-center justify-start w-11 h-11 bg-red-600 rounded-full cursor-pointer relative overflow-hidden transition-all duration-200 shadow-lg hover:w-32 hover:rounded-lg active:translate-x-1 active:translate-y-1" onClick={logout}
                         >
                             <div
                                 className="flex items-center justify-center w-full transition-all duration-300 group-hover:justify-start group-hover:px-3"

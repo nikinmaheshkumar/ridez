@@ -24,8 +24,6 @@ api.interceptors.response.use(
       originalRequest._retry = true;
       try {
         const refresh_token = localStorage.getItem("refresh");
-        console.log("Using refresh token:", refresh_token); // ⬅️ Add this temporarily
-
         const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/refresh/`, {
           refresh: refresh_token,
         });
