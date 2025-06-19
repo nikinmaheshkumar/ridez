@@ -8,7 +8,7 @@ function ActiveRides() {
         const fetchTrips = async () => {
             try {
                 const response = await api.get("/trips");
-                setTrips(response.data); // store the trips in state
+                setTrips(response.data.slice(-5).reverse());
                 console.log(trips);
             } catch (error) {
                 console.error("Error fetching trips:", error);
@@ -38,6 +38,7 @@ function ActiveRides() {
                                 <th className="px-4 py-3">Booking ID</th>
                                 <th className="px-4 py-3">Pickup Location</th>
                                 <th className="px-4 py-3">Drop Location</th>
+                                <th className="px-4 py-3">Created At</th>
                                 <th className="px-4 py-3">Status</th>
                                 <th className="px-4 py-3">Fare</th>
                             </tr>
@@ -48,6 +49,14 @@ function ActiveRides() {
                                     <td className="px-4 py-2 font-medium text-gray-800">{trip.booking_code}</td>
                                     <td className="px-4 py-2">{trip.pickup_location}</td>
                                     <td className="px-4 py-2">{trip.drop_location}</td>
+                                    <td className="px-4 py-2">
+                                        {new Date(trip.created_at).toLocaleString("en-IN", {
+                                            dateStyle: "medium",
+                                            timeStyle: "short",
+                                            hour12: true,
+                                        })}
+                                    </td>
+
                                     <td className="px-4 py-2">
                                         <span className={statusBadge(trip.status)}>{trip.status}</span>
                                     </td>
@@ -63,22 +72,30 @@ function ActiveRides() {
             <div className="md:hidden w-full max-w-md space-y-4">
                 {trips.map((trip) => (
                     <div key={trip.trip_id} className="bg-white rounded-lg shadow-md p-4">
-                        <div className="text-sm text-gray-500">trip ID</div>
+                        <div className="text-sm text-black">Booking ID</div>
                         <div className="font-semibold text-gray-800 mb-2">{trip.booking_code}</div>
 
-                        <div className="text-sm text-gray-500">Pickup Location</div>
-                        <div className="text-gray-700 mb-2">{trip.pickup_location}</div>
+                        <div className="text-sm text-black">Pickup Location</div>
+                        <div className="text-gray-500 mb-2">{trip.pickup_location}</div>
 
-                        <div className="text-sm text-gray-500">Drop Location</div>
-                        <div className="text-gray-700 mb-2">{trip.drop_location}</div>
-
-                        <div className="text-sm text-gray-500">Status</div>
+                        <div className="text-sm text-black">Drop Location</div>
+                        <div className="text-gray-500 mb-2">{trip.drop_location}</div>
+                        
+                        <div className="text-sm text-black">Drop Location</div>
+                        <div className="text-gray-500 mb-2">
+                                        {new Date(trip.created_at).toLocaleString("en-IN", {
+                                            dateStyle: "medium",
+                                            timeStyle: "short",
+                                            hour12: true,
+                                        })}
+                                    </div>
+                        <div className="text-sm text-black">Status</div>
                         <div className="mb-2">
                             <span className={statusBadge(trip.status)}>{trip.status}</span>
                         </div>
 
-                        <div className="text-sm text-gray-500">Fare</div>
-                        <div className="text-gray-800">{trip.fare}</div>
+                        <div className="text-sm text-black">Fare</div>
+                        <div className="text-gray-500">{trip.fare}</div>
                     </div>
                 ))}
             </div>
