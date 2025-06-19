@@ -77,11 +77,11 @@ export default function LoginForm() {
           onChange={(e) => setPassword(e.target.value)}
         />
       </label>
-      <button
-        type="submit"
-        className="rounded-lg bg-[#068fff] text-white w-full sm:w-32 h-10 self-center hover:bg-[#0577d5] transition"
-      >
-        Login
+      <button className="mt-2 self-center relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 w-full sm:w-32" type="submit">
+        <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_180deg_at_50%_50%,#068fff_0%,#00c2ff_25%,#a1e3ff_50%,#005eff_75%,#068fff_100%)]" />
+        <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-black px-3 py-1 font-medium text-white backdrop-blur-3xl">
+          Login
+        </span>
       </button>
     </form>
   );

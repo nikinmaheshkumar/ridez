@@ -1,11 +1,12 @@
 import axios from "axios";
- 
+
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
 });
+
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("access_token");
+    const token = localStorage.getItem("access");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -13,24 +14,33 @@ api.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
+
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-
       try {
-        const refresh_token = localStorage.getItem("refresh_token");
-        const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/token/refresh/`, {
+        const refresh_token = localStorage.getItem("refresh");
+        console.log("Using refresh token:", refresh_token); // ⬅️ Add this temporarily
+
+        const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/refresh/`, {
           refresh: refresh_token,
         });
-        localStorage.setItem("access_token", res.data.access);
+
+
+
+        localStorage.setItem("access", res.data.access);
+
+        originalRequest.headers = originalRequest.headers || {};
         originalRequest.headers.Authorization = `Bearer ${res.data.access}`;
+
         return api(originalRequest);
       } catch (refreshError) {
         localStorage.clear();
-        window.location.href = "/";
+        window.location.href = "/"; // or redirect to login with error toast
       }
     }
 

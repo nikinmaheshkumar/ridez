@@ -45,14 +45,14 @@ export default function AuthPage() {
  
             <div className="absolute inset-0 w-full h-full backface-hidden">
               <div className="w-full h-full p-4 flex flex-col justify-center items-center bg-white/10 backdrop-blur-lg rounded-2xl border-2 border-white/20 shadow-2xl">
-                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-4 sm:mb-6 md:mb-8 top-2">Log in</h2>
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-4 sm:mb-6 md:mb-8 top-2 font-serif">Log in</h2>
                 <LoginForm />
               </div>
             </div>
 
             <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
               <div className="w-full h-full p-4 sm:p-6 md:p-8 flex flex-col justify-center items-center bg-white/10 backdrop-blur-lg rounded-2xl border-2 border-white/20 shadow-2xl">
-                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-4 sm:mb-6 md:mb-8">Sign up</h2>
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-4 sm:mb-6 md:mb-8 font-serif">Sign up</h2>
                 <RegisterForm />
               </div>
             </div>
