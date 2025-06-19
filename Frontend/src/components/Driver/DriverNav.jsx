@@ -39,7 +39,7 @@ function DriverNav() {
                             </div>
                         </div>
                         <div className="hidden md:block">
-                            <div className="ml-10 flex items-baseline space-x-8">
+                            <div className="ml-10 flex items-baseline space-x-4 lg:space-x-8">
                                 {navItems.map((item) => {
                                     const IconComponent = item.icon;
                                     return (
@@ -55,10 +55,20 @@ function DriverNav() {
                             </div>
                         </div>
                         <div className="hidden md:block">
-                            <button className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-6 py-2 rounded-lg text-sm font-medium transition-all duration-200 ease-in-out flex items-center space-x-2 shadow-lg hover:shadow-red-500/25 hover:scale-105" onClick={logout}>
+                            <button
+                            class="group flex items-center justify-start w-11 h-11 bg-red-600 rounded-full cursor-pointer relative overflow-hidden transition-all duration-200 shadow-lg hover:w-32 hover:rounded-lg active:translate-x-1 active:translate-y-1" onClick={logout}
+                        >
+                            <div
+                                className="flex items-center justify-center w-full transition-all duration-300 group-hover:justify-start group-hover:px-3"
+                            >
                                 <LogOut size={16} />
-                                <span>Logout</span>
-                            </button>
+                            </div>
+                            <div
+                                className="absolute right-5 transform translate-x-full opacity-0 text-white text-md font-semibold transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100 rounded-lg"
+                            >
+                                Logout
+                            </div>
+                        </button>
                         </div>
                         <div className="md:hidden">
                             <button

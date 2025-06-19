@@ -47,7 +47,7 @@ export default function LoginForm() {
   return (
     <form
       onSubmit={handleLogin}
-      className="flex flex-col gap-4 py-6 px-4 w-full max-w-md mx-auto items-start  "
+      className="flex flex-col gap-4 py-2 px-4 w-full max-w-md mx-auto items-start  "
       autoComplete="off"
     >
       <label className="flex flex-row items-center border border-white rounded-md p-3 w-full">
