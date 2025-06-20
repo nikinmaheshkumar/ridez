@@ -21,7 +21,7 @@ export default function RegisterForm({ setMode }) {
         name: name,
         password: password,
       },);
-      console.log("Registration success:", response.data);
+      //console.log("Registration success:", response.data);
       toast.success("Registration successful! Please log in.")
    
     

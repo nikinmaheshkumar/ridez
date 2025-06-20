@@ -16,7 +16,7 @@ export default function LoginForm() {
         number: phone,
         password: password
       },);
-      console.log("Login success:", response.data);
+      //console.log("Login success:", response.data);
       localStorage.setItem("access", response.data.access);
       localStorage.setItem("refresh", response.data.refresh);
       const isDriver = response.data.user.is_driver;

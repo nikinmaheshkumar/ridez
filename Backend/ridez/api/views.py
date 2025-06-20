@@ -62,7 +62,7 @@ class TripViewSet(viewsets.ModelViewSet):
         if trip.status == 'requested' and hasattr(request.user, 'driver'):
             trip.driver = request.user.driver
             trip.start_time = timezone.now()
-            trip.status = 'accepted'
+            trip.status = 'in_progress'
             trip.save()
             return Response({'status': 'Trip confirmed'})
         return Response({'status': 'Trip already confirmed or invalid'}, status=400)
@@ -70,7 +70,7 @@ class TripViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'], url_path='complete')
     def complete_trip(self, request, pk=None):
         trip = self.get_object()
-        if trip.status == 'accepted':
+        if trip.status == 'in_progress':
             trip.completed_time = timezone.now()
             trip.status = 'completed'
             trip.actual_duration = (trip.completed_time - trip.start_time).total_seconds()
@@ -85,7 +85,7 @@ class TripViewSet(viewsets.ModelViewSet):
              return Response({'error': 'Not a driver'}, status=403)
     
         driver = request.user.driver
-        current = self.queryset.filter(driver=driver, status='accepted')
+        current = self.queryset.filter(driver=driver, status='in_progress')
         completed = self.queryset.filter(driver=driver, status='completed')
     
         response = {
@@ -97,9 +97,9 @@ class TripViewSet(viewsets.ModelViewSet):
     def cancel_trip(self, request, pk=None):
         trip = self.get_object()
         if trip.status == 'requested' and trip.user == request.user:
-            trip.status = 'canceled'
+            trip.status = 'cancelled'
             trip.save()
-            return Response({'status': 'Trip canceled'})
+            return Response({'status': 'Cancelled'})
         return Response({'status': 'Unable to cancel'},status=400)
 
 class CustomTokenObtainPairView(TokenObtainPairView):

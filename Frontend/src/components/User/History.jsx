@@ -30,7 +30,7 @@ function History() {
         const base = "px-3 py-1.5 rounded-full text-xs font-semibold ";
         if (status === "requested") return `${base} bg-yellow-400 text-black capitalize`;
         if (status === "accepted") return `${base} bg-blue-400 text-black capitalize`;
-        if (status === "in_progress") return `${base} bg-green-400 text-black capitalize`;
+        if (status === "cancelled") return `${base} bg-red-400 text-black capitalize`;
         if (status === "completed") return `${base} bg-gray-400 text-black capitalize`;
         return `${base} bg-red-100 text-red-800`;
     };
@@ -68,6 +68,15 @@ function History() {
                 <>
                     {/* Desktop Table View */}
                     <div className="hidden md:block w-full max-w-7xl mx-auto mt-7">
+                        <div className="flex justify-between items-center px-4 py-2 text-md text-black">
+                            <div>
+                                Showing {startIndex + 1}-{Math.min(endIndex, trips.length)} of {trips.length} total
+                            </div>
+                            <div>
+                                Total bookings: {trips.length}
+                            </div>
+                        </div>
+
                         <div className="overflow-x-auto rounded-lg shadow-md">
                             <table className="min-w-full bg-white text-sm text-left">
                                 <thead className="bg-black text-[#068fff] uppercase">
@@ -107,6 +116,15 @@ function History() {
 
                     {/* Mobile Card View */}
                     <div className="md:hidden w-full max-w-md mx-auto space-y-4 mt-8">
+                        <div className="flex justify-between items-center px-2 text-sm text-black">
+                            <div>
+                                Showing {startIndex + 1}-{Math.min(endIndex, trips.length)} of {trips.length} total
+                            </div>
+                            <div>
+                                Total: {trips.length}
+                            </div>
+                        </div>
+
                         {currentTrips.map((trip) => (
                             <div key={trip.trip_id} className="bg-white rounded-lg shadow-md p-4">
                                 <div className="text-sm text-black">Booking ID</div>

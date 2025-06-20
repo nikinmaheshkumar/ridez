@@ -23,9 +23,9 @@ function JoinDriver() {
 
         fetchDetails();
     }, []);
-    useEffect(() => {
-        console.log("User updated:", user);
-    }, [user]);
+    // useEffect(() => {
+    //     console.log("User updated:", user);
+    // }, [user]);
 
 
     const carTypes = ["sedan", "suv", "hatchback", "luxury", "minivan"];

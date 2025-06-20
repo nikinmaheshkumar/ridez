@@ -66,9 +66,10 @@ class Trip(models.Model):
     fare = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=20, choices=[
         ('requested', 'Requested'),
-        ('accepted', 'Accepted'),
+        #('accepted', 'Accepted'),
         ('in_progress', 'In Progress'),
         ('completed', 'Completed'),
+        ('cancelled', 'Cancelled')
     ], default='requested')
     start_time = models.DateTimeField(null=True, blank=True)
     completed_time = models.DateTimeField(null=True, blank=True)
