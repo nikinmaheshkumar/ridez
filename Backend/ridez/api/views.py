@@ -70,13 +70,18 @@ class TripViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'], url_path='complete')
     def complete_trip(self, request, pk=None):
         trip = self.get_object()
+        if trip.driver != request.user:
+            return Response({'status': 'Only the assigned driver can complete this trip'}, status=403)
+
         if trip.status == 'in_progress':
             trip.completed_time = timezone.now()
             trip.status = 'completed'
             trip.actual_duration = (trip.completed_time - trip.start_time).total_seconds()
             trip.save()
-            return Response({'status': 'Trip completed'})
+            return Response({'status': 'Completed'})
+        
         return Response({'status': 'Trip not in progress'}, status=400)
+
     
     @action(detail=False, methods=['get'], url_path='driver-trips')
     def driver_trips(self, request):
