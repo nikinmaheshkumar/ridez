@@ -20,12 +20,9 @@ export default function RegisterForm({ setMode }) {
         email: email,
         name: name,
         password: password,
-      }, {
-        headers: {
-          "Content-Type": "application/json",
-        }
-      });
+      },);
       console.log("Registration success:", response.data);
+      toast.success("Registration successful! Please log in.")
    
     
     } catch (error) {
@@ -37,7 +34,7 @@ export default function RegisterForm({ setMode }) {
         toast.error("An error occurred: " + error.message);
       }
     }
-     setMode("login");
+     setMode();
   };
 
   return (

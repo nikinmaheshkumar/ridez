@@ -15,11 +15,7 @@ export default function LoginForm() {
       const response = await api.post("/login/", {
         number: phone,
         password: password
-      }, {
-        headers: {
-          "Content-Type": "application/json"
-        }
-      });
+      },);
       console.log("Login success:", response.data);
       localStorage.setItem("access", response.data.access);
       localStorage.setItem("refresh", response.data.refresh);

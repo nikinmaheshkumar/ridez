@@ -12,7 +12,7 @@ function UserNav() {
         navigate('/history')
     }
     const handleDriv = () => {
-        navigate('/driver')
+        navigate('/joindriver')
     }
     const logout = () => {
         localStorage.clear()
