@@ -15,7 +15,7 @@ function DriverNav() {
         navigate('/driver')
     }
     const handleReq = () => {
-        navigate('/driver')
+        navigate('/requests')
     }
     const logout = () => {
         localStorage.clear()
@@ -24,9 +24,9 @@ function DriverNav() {
 
   const navItems = [
         { name: 'Dashboard', icon: LayoutDashboard, handle: handleDash },
-        { name: 'Profile', icon: User,  handle: handleProf },
         { name: 'History', icon: History,  handle: handleHist },
         { name: 'Requests', icon: BellRing,  handle: handleReq },
+        { name: 'Profile', icon: User,  handle: handleProf },
     ];
 
         return (

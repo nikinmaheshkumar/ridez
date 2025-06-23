@@ -191,7 +191,7 @@ function DriverRequestsPreview() {
       </dialog>
       <div className="text-right mt-4">
         <button
-          onClick={() => navigate("/driver/requests")}
+          onClick={() => navigate("/requests")}
           className="text-[#068fff] text-sm font-medium"
         >
           [See All] →

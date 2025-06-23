@@ -5,8 +5,6 @@ import "react-toastify/dist/ReactToastify.css";
 
 function DrivActiveRides() {
     const [trips, setTrips] = useState([]);
-
-    // Fetch trips that are in_progress only
     useEffect(() => {
     const fetchTrips = async () => {
         try {
