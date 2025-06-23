@@ -34,7 +34,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = "number"
 
     objects = UserManager()
+    
+    def get_full_name(self):
+        return self.name
 
+    def __str__(self):
+        return self.name
 class Driver(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     car_model = models.CharField(max_length=50)

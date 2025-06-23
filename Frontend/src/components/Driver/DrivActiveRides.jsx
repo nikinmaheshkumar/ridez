@@ -8,23 +8,27 @@ function DrivActiveRides() {
 
     // Fetch trips that are in_progress only
     useEffect(() => {
-        const fetchTrips = async () => {
-            try {
-                const response = await api.get("/trips/");
-                console.log("Fetched all trips:", response.data);
+    const fetchTrips = async () => {
+        try {
+            const response = await api.get("/trips/");
+            const filtered = response.data.filter(trip => trip.status === "in_progress");
+            setTrips(filtered);
+        } catch (error) {
+            toast.error("Failed to fetch trips.");
+        }
+    };
 
-                const filtered = response.data.filter(trip => trip.status === "in_progress");
-                console.log("Filtered in_progress trips:", filtered);
+    fetchTrips();
 
-                setTrips(filtered);
-            } catch (error) {
-                console.error("Error fetching trips:", error);
-                toast.error("Failed to fetch trips.");
-            }
-        };
+    const handleTripAccepted = () => fetchTrips();
 
-        fetchTrips();
-    }, []);
+    window.addEventListener("tripAccepted", handleTripAccepted);
+
+    return () => {
+        window.removeEventListener("tripAccepted", handleTripAccepted);
+    };
+}, []);
+
 
     // Handle completing the ride
     const handleComplete = async (tripId) => {

@@ -35,16 +35,22 @@ class DriverSerializer(serializers.ModelSerializer):
         read_only_fields = ['user', 'created_at']
     
 class TripSerializer(serializers.ModelSerializer):
+    user_name = serializers.CharField(source="user.get_full_name", read_only=True)
+
     class Meta:
         model = Trip
-        fields = ['tid', 'user', 'driver', 'booking_code', 'pickup_location',
-                   'pickup_lat', 'pickup_lng',
-                   'drop_location', 'drop_lat', 'drop_lng',
-                   'distance', 'est_duration', 'fare',
-                   'status', 'start_time', 'completed_time',
-                   'actual_duration', 'created_at']
-
-        read_only_fields = ['user', 'driver', 'created_at', 'start_time', 'completed_time', 'actual_duration']
+        fields = [
+            'tid', 'user', 'user_name', 'driver', 'booking_code',
+            'pickup_location', 'pickup_lat', 'pickup_lng',
+            'drop_location', 'drop_lat', 'drop_lng',
+            'distance', 'est_duration', 'fare',
+            'status', 'start_time', 'completed_time',
+            'actual_duration', 'created_at'
+        ]
+        read_only_fields = [
+            'user', 'driver', 'created_at',
+            'start_time', 'completed_time', 'actual_duration'
+        ]
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
