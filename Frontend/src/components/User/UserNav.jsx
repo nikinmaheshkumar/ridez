@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Menu, X, History, LayoutDashboard, LogOut, CirclePlus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-
+import { MdOutlineDarkMode } from "react-icons/md";
+import { MdOutlineLightMode } from "react-icons/md";
 function UserNav() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const navigate = useNavigate();
@@ -50,7 +51,12 @@ function UserNav() {
                             })}
                         </div>
                     </div>
-                    <div className="hidden md:block">
+                    <div className="hidden md:flex flex-row gap-8">
+                        <label className="swap swap-rotate">
+                            <input type="checkbox" className="theme-controller" value="dark" />
+                            <MdOutlineDarkMode className="swap-on h-8 w-8 fill-current text-white" />
+                            <MdOutlineLightMode className="swap-off h-8 w-8 fill-current text-white" />
+                        </label>
                         <button
                             className="group flex items-center justify-start w-11 h-11 bg-red-600 rounded-full cursor-pointer relative overflow-hidden transition-all duration-200 shadow-lg hover:w-32 hover:rounded-lg active:translate-x-1 active:translate-y-1" onClick={logout}
                         >
@@ -96,7 +102,23 @@ function UserNav() {
                                     </button>
                                 );
                             })}
-                            <div className="pt-2 border-t border-gray-700">
+                            <div className="pt-4 border-t border-gray-700 space-y-4">
+                                {/* Theme Toggle */}
+                                <div className="flex items-center justify-between px-4">
+                                    <label htmlFor="theme-toggle" className="text-md text-white">Theme</label>
+                                    <div className="flex items-center space-x-1">
+                                        <MdOutlineLightMode className="h-6 w-6 text-yellow-400 mr-2" />
+                                        <input
+                                            type="checkbox"
+                                            id="theme-toggle"
+                                            className="toggle theme-controller bg-gray-300 border-gray-400"
+                                            value="dark"
+                                        />
+                                        <MdOutlineDarkMode className="h-6 w-6 text-blue-400 ml-2" />
+                                    </div>
+                                </div>
+
+                                {/* Logout Button */}
                                 <button
                                     className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 w-full flex items-center justify-center space-x-2 shadow-lg"
                                     onClick={logout}
