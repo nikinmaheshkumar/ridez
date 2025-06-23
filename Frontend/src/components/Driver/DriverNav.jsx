@@ -98,7 +98,11 @@ function DriverNav() {
                                     <button
                                         key={item.name}
                                         className="text-[#068fff] block px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 w-full text-left flex items-center space-x-3"
-                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        onClick={() => {
+                                            setIsMobileMenuOpen(false);
+                                            item.handle();
+                                        }}
+
                                     >
                                         <IconComponent size={20} />
                                         <span>{item.name}</span>

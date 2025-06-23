@@ -3,6 +3,8 @@ import api from "../../services/api";
 import axios from "axios";
 import { MdLocationPin } from "react-icons/md";
 import { FaFlagCheckered } from "react-icons/fa";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function BookRides() {
     const [drop, setDrop] = useState(false);
@@ -40,9 +42,13 @@ function BookRides() {
                 label: feature.properties.label,
                 coords: feature.geometry.coordinates,
             }));
+            if (suggestions.length === 0) {
+                toast.error("No suggestions found for the entered address.");
+            }
             setter(suggestions);
         } catch (err) {
             console.error("Autocomplete error:", err);
+            toast.error("Failed to fetch location suggestions.");
         }
     };
 
@@ -66,7 +72,21 @@ function BookRides() {
 
     const calFare = async (e) => {
         e.preventDefault();
-        if (!pickCoords || !dropCoords) return alert("Please select both locations.");
+
+        if (!pickLoc.trim() || !dropLoc.trim()) {
+            toast.error("Pickup and drop locations are required.");
+            return;
+        }
+
+        if (!pickCoords || !dropCoords) {
+            toast.error("Please select locations from suggestions.");
+            return;
+        }
+
+        if (pickCoords[0] === dropCoords[0] && pickCoords[1] === dropCoords[1]) {
+            toast.error("Pickup and drop locations cannot be the same.");
+            return;
+        }
 
         try {
             const response = await axios.post("https://api.openrouteservice.org/v2/directions/driving-car/json", {
@@ -80,11 +100,16 @@ function BookRides() {
             });
 
             const route = response.data.routes[0];
+            if (!route || !route.summary) {
+                toast.error("Invalid routing response. Please try again.");
+                return;
+            }
+
             const distance = route.summary.distance;
             const durationSec = route.summary.duration;
 
-            if (!durationSec || isNaN(durationSec)) {
-                alert("Could not get travel time from routing API. Try again.");
+            if (!durationSec || isNaN(durationSec) || !distance || isNaN(distance)) {
+                toast.error("Invalid trip details from API.");
                 return;
             }
 
@@ -113,6 +138,7 @@ function BookRides() {
             setDrop(true);
         } catch (err) {
             console.error("Error calculating fare:", err);
+            toast.error("Failed to calculate fare. Please try again.");
         }
     };
 
@@ -138,12 +164,11 @@ function BookRides() {
                     "Content-Type": "application/json",
                 },
             });
-
-            alert(`Booking Confirmed! Code: ${booking_code}`);
-            window.location.reload(); 
+            toast.success(`Booking Confirmed! Code: ${booking_code}`);
+            setTimeout(() => window.location.reload(), 2000);
         } catch (err) {
             console.error("Trip booking failed:", err.response?.data || err);
-            alert("Failed to confirm booking. Please try again.");
+            toast.error("Failed to confirm booking. Please try again.");
         }
     };
 
