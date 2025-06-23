@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import api from "../../services/api";
-import DriverNav from "./DriverNav"
-import { FaHistory } from "react-icons/fa";
+import DriverNav from "./DriverNav";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Requests() {
     const [trips, setTrips] = useState([]);
@@ -13,7 +14,8 @@ function Requests() {
         const fetchTrips = async () => {
             try {
                 const response = await api.get("/trips");
-                setTrips(response.data);
+                const filtered = response.data.filter(trip => trip.status === "requested");
+                setTrips(filtered);
             } catch (error) {
                 console.error("Error fetching trips:", error);
             }
@@ -21,6 +23,21 @@ function Requests() {
 
         fetchTrips();
     }, []);
+
+    const handleAccept = async (tripId) => {
+        try {
+            await api.post(`/trips/${tripId}/accept/`);
+            toast.success("Trip Accepted successfully!");
+
+            const refreshed = await api.get("/trips");
+            const filtered = refreshed.data.filter(trip => trip.status === "requested");
+            setTrips(filtered);
+
+            window.dispatchEvent(new Event("tripAccepted"));
+        } catch (error) {
+            toast.error(error.response?.data?.status || "Failed to accept trip.");
+        }
+    };
 
     const totalPages = Math.ceil(trips.length / tripsPerPage);
     const startIndex = (currentPage - 1) * tripsPerPage;
@@ -58,7 +75,7 @@ function Requests() {
             <DriverNav />
             <div className="bg-white rounded-lg shadow-md p-4 w-full max-w-6xl mx-auto mt-6">
                 {/* Desktop View */}
-                {trips.length === 0 ? (
+                {currentTrips.length === 0 ? (
                     <div className="text-gray-500 text-sm">No ride requests found.</div>
                 ) : (
                     <div className="overflow-x-auto hidden md:block">
@@ -74,7 +91,7 @@ function Requests() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {trips.map((trip) => (
+                                {currentTrips.map((trip) => (
                                     <tr key={trip.tid} className="border-t text-center">
                                         <td className="px-6 py-4 font-medium text-gray-800 text-nowrap">
                                             {trip.user_name || "Unknown"}
@@ -107,8 +124,9 @@ function Requests() {
                         {renderPagination()}
                     </div>
                 )}
+                {/* Mobile View */}
                 <div className="md:hidden w-full max-w-lg mx-auto mt-6 space-y-4">
-                    {trips.map((trip) => (
+                    {currentTrips.map((trip) => (
                         <div key={trip.tid} className="bg-white rounded-lg shadow-md p-4">
                             <div className="text-sm text-black">User Name</div>
                             <div className="font-semibold text-gray-800 mb-2">{trip.user_name || "Unknown"}</div>
@@ -205,18 +223,9 @@ function Requests() {
                         </div>
                     </div>
                 </dialog>
-                <div className="text-right mt-4">
-                    <button
-                        onClick={() => navigate("/requests")}
-                        className="text-[#068fff] text-sm font-medium"
-                    >
-                        [See All] →
-                    </button>
-                </div>
             </div>
         </>
     );
-
 }
 
 export default Requests;
