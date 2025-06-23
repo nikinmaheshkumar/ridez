@@ -87,19 +87,15 @@ class TripViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['get'], url_path='driver-trips')
     def driver_trips(self, request):
-        """List both current and completed trips for this driver."""
+        """Return all trips (accepted, in progress, completed) in a single list."""
         if not hasattr(request.user, 'driver'):
-             return Response({'error': 'Not a driver'}, status=403)
-    
+            return Response({'error': 'Not a driver'}, status=403)
+
         driver = request.user.driver
-        current = self.queryset.filter(driver=driver, status='in_progress')
-        completed = self.queryset.filter(driver=driver, status='completed')
-    
-        response = {
-            'current_trips': self.serializer_class(current, many=True).data,
-            'completed_trips': self.serializer_class(completed, many=True).data,
-        }
-        return Response(response)
+        trips = self.queryset.filter(driver=driver, status__in=['accepted', 'in_progress', 'completed'])
+
+        return Response(self.serializer_class(trips, many=True).data)
+
     @action(detail=True, methods=['post'], url_path='cancel')
     def cancel_trip(self, request, pk=None):
         trip = self.get_object()

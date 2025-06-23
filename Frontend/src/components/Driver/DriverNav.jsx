@@ -13,7 +13,7 @@ function DriverNav() {
         navigate('/driver')
     }
     const handleHist = () => {
-        navigate('/driver')
+        navigate('/drivhistory')
     }
     const handleReq = () => {
         navigate('/requests')
