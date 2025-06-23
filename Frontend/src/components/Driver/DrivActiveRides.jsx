@@ -60,7 +60,7 @@ function DrivActiveRides() {
         if (status === "accepted") return `${base} bg-blue-400 text-black capitalize`;
         if (status === "cancelled") return `${base} bg-red-400 text-black capitalize`;
         if (status === "completed") return `${base} bg-gray-400 text-black capitalize`;
-        if (status === "in_progress") return `${base} bg-green-400 text-black capitalize`;
+        if (status === "in_progress") return `${base} bg-green-400 text-black uppercase`;
         return `${base} bg-red-100 text-red-800`;
     };
 
