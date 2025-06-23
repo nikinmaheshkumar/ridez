@@ -10,7 +10,7 @@ function DriverNav() {
         navigate('/driver')
     }
     const handleProf = () => {
-        navigate('/driver')
+        navigate('/profile')
     }
     const handleHist = () => {
         navigate('/drivhistory')

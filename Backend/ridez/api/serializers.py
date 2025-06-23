@@ -29,10 +29,23 @@ class UserSerializer(serializers.ModelSerializer):
         
 
 class DriverSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(source="user.name", read_only=True)
+    email = serializers.EmailField(source="user.email", read_only=True)
+    number = serializers.CharField(source="user.number", read_only=True)
+
     class Meta:
         model = Driver
-        fields = ['user', 'car_model', 'car_number', 'car_type', 'license_number', 'is_active', 'created_at']
-        read_only_fields = ['user', 'created_at']
+        fields = [
+            "car_model",
+            "car_number",
+            "car_type",
+            "license_number",
+            "is_active",
+            "created_at",
+            "name",     # added
+            "email",    # added
+            "number",   # added
+        ]
     
 class TripSerializer(serializers.ModelSerializer):
     user_name = serializers.CharField(source="user.get_full_name", read_only=True)

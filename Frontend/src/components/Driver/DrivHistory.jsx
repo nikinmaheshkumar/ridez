@@ -83,7 +83,7 @@ function DrivHistory() {
                                         <th className="px-4 py-3">Booking ID</th>
                                         <th className="px-4 py-3">Pickup Location</th>
                                         <th className="px-4 py-3">Drop Location</th>
-                                        <th className="px-4 py-3">Created At</th>
+                                        <th className="px-4 py-3">Completed At</th>
                                         <th className="px-4 py-3">Status</th>
                                         <th className="px-4 py-3">Fare</th>
                                     </tr>
@@ -95,7 +95,7 @@ function DrivHistory() {
                                             <td className="px-6 py-3">{trip.pickup_location}</td>
                                             <td className="px-6 py-3">{trip.drop_location}</td>
                                             <td className="px-6 py-3">
-                                                {new Date(trip.created_at).toLocaleString("en-IN", {
+                                                {new Date(trip.completed_time).toLocaleString("en-IN", {
                                                     dateStyle: "medium",
                                                     timeStyle: "short",
                                                     hour12: true,
@@ -135,9 +135,9 @@ function DrivHistory() {
                                 <div className="text-sm text-black">Drop Location</div>
                                 <div className="text-gray-500 mb-2">{trip.drop_location}</div>
 
-                                <div className="text-sm text-black">Created At</div>
+                                <div className="text-sm text-black">Completed At</div>
                                 <div className="text-gray-500 mb-2">
-                                    {new Date(trip.created_at).toLocaleString("en-IN", {
+                                    {new Date(trip.completed_time).toLocaleString("en-IN", {
                                         dateStyle: "medium",
                                         timeStyle: "short",
                                         hour12: true,
