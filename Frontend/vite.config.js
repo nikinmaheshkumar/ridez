@@ -1,16 +1,17 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import tailwindcss from '@tailwindcss/vite';
-import { VitePWA } from 'vite-plugin-pwa';
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
+import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
+  base: '/', // ✅ required for proper routing on Netlify
   plugins: [
     tailwindcss(),
     react(),
     VitePWA({
       registerType: 'autoUpdate',
       devOptions: {
-        enabled: true, // Enable in dev mode
+        enabled: true,
       },
       manifest: {
         name: 'Ridez',
@@ -33,7 +34,7 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,json}'],
         runtimeCaching: [
           {
             urlPattern: ({ request }) => request.destination === 'document',
@@ -64,4 +65,4 @@ export default defineConfig({
       },
     }),
   ],
-});
+})
