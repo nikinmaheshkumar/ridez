@@ -11,7 +11,7 @@ function ActiveRides() {
             try {
                 const response = await api.get("/trips");
                 const filtered = response.data
-                    .filter(trip => ["requested", "in_progress", "cancelled"].includes(trip.status))
+                    .filter(trip => ["requested","in_progress"].includes(trip.status))
                     .sort((a, b) => {
                         const priority = { requested: 3, in_progress: 2, cancelled: 1 };
                         return priority[a.status] - priority[b.status];

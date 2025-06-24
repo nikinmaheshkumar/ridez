@@ -8,10 +8,11 @@ function DrivActiveRides() {
     useEffect(() => {
     const fetchTrips = async () => {
         try {
-            const response = await api.get("/trips/");
+            const response = await api.get("/trips/driver-trips/");
             const filtered = response.data.filter(trip => trip.status === "in_progress");
             setTrips(filtered);
         } catch (error) {
+            console.log(error);
             toast.error("Failed to fetch trips.");
         }
     };

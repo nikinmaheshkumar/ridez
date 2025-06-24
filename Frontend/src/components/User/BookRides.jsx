@@ -168,7 +168,7 @@ function BookRides() {
             setTimeout(() => window.location.reload(), 2000);
         } catch (err) {
             console.error("Trip booking failed:", err.response?.data || err);
-            toast.error("Failed to confirm booking. Please try again.");
+            toast.error(err.response?.data[0]);
         }
     };
 
@@ -265,7 +265,7 @@ function BookRides() {
                         className="mt-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 w-full"
                         onClick={handleTripConfirm}
                     >
-                        Confirm & Close
+                        Confirm Booking
                     </button>
                 </div>
             )}

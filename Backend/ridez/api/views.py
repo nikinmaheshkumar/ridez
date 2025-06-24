@@ -38,16 +38,22 @@ class DriverViewSet(viewsets.ModelViewSet):
         serializer.save(user=self.request.user)
 
 
+
+
 class TripViewSet(viewsets.ModelViewSet):
     queryset = Trip.objects.all()
     serializer_class = TripSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
-        if hasattr(self.request.user, 'driver'):
+        user = self.request.user
+        if hasattr(user, 'driver'):
             raise ValidationError("Drivers cannot create booking requests.")
-        serializer.save(user=self.request.user)
-        
+        existing = Trip.objects.filter(user=user, status__in=['requested', 'in_progress'])
+        if existing.exists():
+            raise ValidationError("You already have a trip in progress or requested.")
+        serializer.save(user=user)
+
     def get_queryset(self):
         if self.request.user.is_authenticated:
             if hasattr(self.request.user, 'driver'):
@@ -55,17 +61,23 @@ class TripViewSet(viewsets.ModelViewSet):
             return self.queryset.filter(user=self.request.user)
         return self.queryset.none()
 
-    
     @action(detail=True, methods=['post'], url_path='accept')
     def confirm_trip(self, request, pk=None):
         trip = self.get_object()
-        if trip.status == 'requested' and hasattr(request.user, 'driver'):
-            trip.driver = request.user.driver
-            trip.start_time = timezone.now()
-            trip.status = 'in_progress'
-            trip.save()
-            return Response({'status': 'Trip confirmed'})
-        return Response({'status': 'Trip already confirmed or invalid'}, status=400)
+        user = request.user
+        if trip.status != 'requested':
+            return Response({'status': 'Trip already confirmed or invalid'}, status=400)
+        if not hasattr(user, 'driver'):
+            return Response({'status': 'Only drivers can accept trips'}, status=403)
+        driver = user.driver
+        existing = Trip.objects.filter(driver=driver, status__in=['in_progress'])
+        if existing.exists():
+            return Response({'status': 'You already have an active trip'}, status=400)
+        trip.driver = driver
+        trip.start_time = timezone.now()
+        trip.status = 'in_progress'
+        trip.save()
+        return Response({'status': 'Trip confirmed'})
 
     @action(detail=True, methods=['post'], url_path='complete')
     def complete_trip(self, request, pk=None):
@@ -83,8 +95,6 @@ class TripViewSet(viewsets.ModelViewSet):
 
         return Response({'status': 'Trip not in progress'}, status=400)
 
-
-    
     @action(detail=False, methods=['get'], url_path='driver-trips')
     def driver_trips(self, request):
         """Return all trips (accepted, in progress, completed) in a single list."""
@@ -93,7 +103,6 @@ class TripViewSet(viewsets.ModelViewSet):
 
         driver = request.user.driver
         trips = self.queryset.filter(driver=driver, status__in=['accepted', 'in_progress', 'completed'])
-
         return Response(self.serializer_class(trips, many=True).data)
 
     @action(detail=True, methods=['post'], url_path='cancel')
@@ -103,7 +112,7 @@ class TripViewSet(viewsets.ModelViewSet):
             trip.status = 'cancelled'
             trip.save()
             return Response({'status': 'Cancelled'})
-        return Response({'status': 'Unable to cancel'},status=400)
+        return Response({'status': 'Unable to cancel'}, status=400)
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
