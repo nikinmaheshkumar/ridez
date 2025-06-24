@@ -52,11 +52,11 @@ function UserNav() {
                         </div>
                     </div>
                     <div className="hidden md:flex flex-row gap-8">
-                        <label className="swap swap-rotate">
+                        {/* <label className="swap swap-rotate">
                             <input type="checkbox" className="theme-controller" value="dark" />
                             <MdOutlineDarkMode className="swap-on h-8 w-8 fill-current text-white" />
                             <MdOutlineLightMode className="swap-off h-8 w-8 fill-current text-white" />
-                        </label>
+                        </label> */}
                         <button
                             className="group flex items-center justify-start w-11 h-11 bg-red-600 rounded-full cursor-pointer relative overflow-hidden transition-all duration-200 shadow-lg hover:w-32 hover:rounded-lg active:translate-x-1 active:translate-y-1" onClick={logout}
                         >
@@ -104,7 +104,7 @@ function UserNav() {
                             })}
                             <div className="pt-4 border-t border-gray-700 space-y-4">
                                 {/* Theme Toggle */}
-                                <div className="flex items-center justify-between px-4">
+                                {/* <div className="flex items-center justify-between px-4">
                                     <label htmlFor="theme-toggle" className="text-md text-white">Theme</label>
                                     <div className="flex items-center space-x-1">
                                         <MdOutlineLightMode className="h-6 w-6 text-yellow-400 mr-2" />
@@ -116,7 +116,7 @@ function UserNav() {
                                         />
                                         <MdOutlineDarkMode className="h-6 w-6 text-blue-400 ml-2" />
                                     </div>
-                                </div>
+                                </div> */}
 
                                 {/* Logout Button */}
                                 <button
