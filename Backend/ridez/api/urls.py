@@ -16,5 +16,5 @@ urlpatterns = [
     path('signup/', SignupView.as_view(), name='signup'),  # Signup
     path('login/', CustomTokenObtainPairView.as_view(), name='login'),  # ✅ Custom Login
     path('refresh/', TokenRefreshView.as_view(), name='refresh'),  # Refresh
-    path('api/autocomplete/', autocomplete_view),
+    path('autocomplete/', autocomplete_view),
 ]
