@@ -7,6 +7,9 @@ from .models import User, Driver,Trip
 from rest_framework.exceptions import ValidationError
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import CustomTokenObtainPairSerializer
+import requests
+from django.http import JsonResponse
+from django.conf import settings
 
 class SignupView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -116,3 +119,27 @@ class TripViewSet(viewsets.ModelViewSet):
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
+
+
+def autocomplete_view(request):
+    text = request.GET.get('text')
+    if not text:
+        return JsonResponse({'error': 'Text query required'}, status=400)
+
+    ors_url = 'https://api.openrouteservice.org/geocode/autocomplete'
+    headers = {
+        'Authorization': settings.ORS_API_KEY,
+    }
+    params = {
+        'text': text,
+        'boundary.country': 'in',
+    }
+
+    try:
+        ors_response = requests.get(ors_url, headers=headers, params=params)
+        ors_response.raise_for_status()  # Raise HTTPError if status is 4xx or 5xx
+        return JsonResponse(ors_response.json(), safe=False)
+    except requests.exceptions.HTTPError as http_err:
+        return JsonResponse({'error': 'ORS error', 'details': str(http_err)}, status=ors_response.status_code)
+    except Exception as e:
+        return JsonResponse({'error': 'Request failed', 'details': str(e)}, status=500)

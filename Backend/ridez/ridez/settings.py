@@ -99,7 +99,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ridez.wsgi.application'
 
-
+ORS_API_KEY = os.getenv('ORS_API_KEY')
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
