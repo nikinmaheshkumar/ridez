@@ -1,4 +1,4 @@
-from rest_framework import generics, permissions, viewsets, response
+from rest_framework import generics, permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.utils import timezone
@@ -138,7 +138,7 @@ def autocomplete_view(request):
 
     try:
         ors_response = requests.get(ors_url, headers=headers, params=params)
-        print("ORS response:", response.status_code, response.text)
+        print("ORS response:", ors_response.status_code, ors_response.text)
         ors_response.raise_for_status()  # Raise HTTPError if status is 4xx or 5xx
         return JsonResponse(ors_response.json(), safe=False)
     except requests.exceptions.HTTPError as http_err:
