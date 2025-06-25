@@ -3,46 +3,57 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.utils import timezone
 from .serializers import SignupSerializer, DriverSerializer, TripSerializer
-from .models import User, Driver,Trip
+from .models import User, Driver, Trip
 from rest_framework.exceptions import ValidationError
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import CustomTokenObtainPairSerializer
-import requests
+
 from django.http import JsonResponse
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
 
+import requests
+import json
+
+
+# ----- Auth Views -----
 class SignupView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = SignupSerializer
     permission_classes = [permissions.AllowAny]
 
 
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
+
+
+# ----- User Views -----
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = SignupSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    # Optional: restrict to own profile
     def get_queryset(self):
         return self.queryset.filter(uid=self.request.user.uid)
 
+
+# ----- Driver Views -----
 class DriverViewSet(viewsets.ModelViewSet):
     queryset = Driver.objects.all()
     serializer_class = DriverSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    # Optional: restrict to own profile
     def get_queryset(self):
         if self.request.user.is_authenticated:
             return self.queryset.filter(user=self.request.user)
         return self.queryset.none()
-    
+
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
 
-
-
+# ----- Trip Views -----
 class TripViewSet(viewsets.ModelViewSet):
     queryset = Trip.objects.all()
     serializer_class = TripSerializer
@@ -85,25 +96,20 @@ class TripViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'], url_path='complete')
     def complete_trip(self, request, pk=None):
         trip = self.get_object()
-
         if not trip.driver or trip.driver.user != request.user:
             return Response({'status': 'Only the assigned driver can complete this trip'}, status=403)
-
         if trip.status == 'in_progress':
             trip.completed_time = timezone.now()
             trip.status = 'completed'
             trip.actual_duration = (trip.completed_time - trip.start_time).total_seconds()
             trip.save()
             return Response({'status': 'Completed'})
-
         return Response({'status': 'Trip not in progress'}, status=400)
 
     @action(detail=False, methods=['get'], url_path='driver-trips')
     def driver_trips(self, request):
-        """Return all trips (accepted, in progress, completed) in a single list."""
         if not hasattr(request.user, 'driver'):
             return Response({'error': 'Not a driver'}, status=403)
-
         driver = request.user.driver
         trips = self.queryset.filter(driver=driver, status__in=['accepted', 'in_progress', 'completed'])
         return Response(self.serializer_class(trips, many=True).data)
@@ -117,31 +123,36 @@ class TripViewSet(viewsets.ModelViewSet):
             return Response({'status': 'Cancelled'})
         return Response({'status': 'Unable to cancel'}, status=400)
 
-class CustomTokenObtainPairView(TokenObtainPairView):
-    serializer_class = CustomTokenObtainPairSerializer
 
+# ----- Reusable OpenRouteService Proxy -----
+@csrf_exempt
+@require_http_methods(["GET", "POST"])
+def ors_proxy_view(request):
+    endpoint = request.GET.get("endpoint")
+    method = request.method
 
-def autocomplete_view(request):
-    print("ORS KEY:", settings.ORS_API_KEY)
-    text = request.GET.get('text')
-    if not text:
-        return JsonResponse({'error': 'Text query required'}, status=400)
+    if not endpoint:
+        return JsonResponse({"error": "Missing 'endpoint' query param"}, status=400)
 
-    ors_url = 'https://api.openrouteservice.org/geocode/autocomplete'
+    # Construct the full ORS URL
+    base_url = "https://api.openrouteservice.org"
+    full_url = f"{base_url}/{endpoint.lstrip('/')}"
+
     headers = {
-        'Authorization': settings.ORS_API_KEY,
-    }
-    params = {
-        'text': text,
-        'boundary.country': 'in',
+        "Authorization": settings.ORS_API_KEY,
+        "Content-Type": "application/json",
     }
 
     try:
-        ors_response = requests.get(ors_url, headers=headers, params=params)
-        print("ORS response:", ors_response.status_code, ors_response.text)
-        ors_response.raise_for_status()  # Raise HTTPError if status is 4xx or 5xx
-        return JsonResponse(ors_response.json(), safe=False)
-    except requests.exceptions.HTTPError as http_err:
-        return JsonResponse({'error': 'ORS error', 'details': str(http_err)}, status=ors_response.status_code)
-    except Exception as e:
-        return JsonResponse({'error': 'Request failed', 'details': str(e)}, status=500)
+        if method == "GET":
+            # Use .dict() to extract query parameters except "endpoint"
+            params = request.GET.copy()
+            params.pop("endpoint", None)
+            response = requests.get(full_url, headers=headers, params=params)
+        else:
+            body = json.loads(request.body.decode("utf-8"))
+            response = requests.post(full_url, headers=headers, json=body)
+
+        return JsonResponse(response.json(), status=response.status_code)
+    except requests.exceptions.RequestException as e:
+        return JsonResponse({"error": "Request failed", "details": str(e)}, status=500)

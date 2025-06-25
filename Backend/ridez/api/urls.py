@@ -1,20 +1,24 @@
 from rest_framework.routers import DefaultRouter
 from django.urls import path, include
-from .views import UserViewSet,SignupView, DriverViewSet, TripViewSet
+from .views import (
+    UserViewSet, SignupView, DriverViewSet, TripViewSet,
+    CustomTokenObtainPairView, ors_proxy_view  # ✅ updated import
+)
 from rest_framework_simplejwt.views import TokenRefreshView
-from .views import CustomTokenObtainPairView, autocomplete_view
+
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'drivers', DriverViewSet)
-router.register(r'trips', TripViewSet) 
-
-
-
+router.register(r'trips', TripViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('signup/', SignupView.as_view(), name='signup'),  # Signup
-    path('login/', CustomTokenObtainPairView.as_view(), name='login'),  # ✅ Custom Login
-    path('refresh/', TokenRefreshView.as_view(), name='refresh'),  # Refresh
-    path('autocomplete/', autocomplete_view),
+
+    # Auth
+    path('signup/', SignupView.as_view(), name='signup'),
+    path('login/', CustomTokenObtainPairView.as_view(), name='login'),
+    path('refresh/', TokenRefreshView.as_view(), name='refresh'),
+
+    # ORS Proxy
+    path('ors/', ors_proxy_view),  # ✅ new reusable endpoint
 ]
