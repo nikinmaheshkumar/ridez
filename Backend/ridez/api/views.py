@@ -122,6 +122,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 
 
 def autocomplete_view(request):
+    print("ORS KEY:", settings.ORS_API_KEY)
     text = request.GET.get('text')
     if not text:
         return JsonResponse({'error': 'Text query required'}, status=400)
@@ -137,6 +138,7 @@ def autocomplete_view(request):
 
     try:
         ors_response = requests.get(ors_url, headers=headers, params=params)
+        print("ORS response:", response.status_code, response.text)
         ors_response.raise_for_status()  # Raise HTTPError if status is 4xx or 5xx
         return JsonResponse(ors_response.json(), safe=False)
     except requests.exceptions.HTTPError as http_err:
