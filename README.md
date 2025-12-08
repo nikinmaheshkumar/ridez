@@ -81,7 +81,7 @@
      ```env
      SECRET_KEY=your-secret-key-here
      DEBUG=True
-     DATABASE_URL=******localhost:5432/ridez_db
+     DATABASE_URL=postgresql://username:password@localhost:5432/ridez_db
      ORS_API_KEY=your_ors_api_key_here
      ```
    - **Note**: `DATABASE_URL` is **required** and must point to your PostgreSQL database.
@@ -132,7 +132,7 @@
 
 ### 📝 Additional Notes
 
-- **Database**: PostgreSQL is required. Set the `DATABASE_URL` environment variable in the backend `.env` file (format: `******localhost:5432/dbname`).
+- **Database**: PostgreSQL is required. Set the `DATABASE_URL` environment variable in the backend `.env` file (format: `postgresql://username:password@localhost:5432/dbname`).
 - **API Key**: You need an OpenRouteService API key for location features. Add it to the backend `.env` file. Get one free at https://openrouteservice.org/
 - **ORS Proxy**: The backend includes a built-in OpenRouteService proxy at `/api/ors/`, so you don't need to run a separate proxy server.
 - **CORS**: The backend is configured to allow requests from `localhost:5173` by default.

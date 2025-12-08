@@ -28,7 +28,7 @@ if not DATABASE_URL:
     raise ValueError(
         "DATABASE_URL environment variable is required. "
         "Please set it in your .env file. "
-        "Example: DATABASE_URL=******localhost:5432/ridez_db"
+        "Example: DATABASE_URL=postgresql://username:password@localhost:5432/ridez_db"
     )
 
 tmpPostgres = urlparse(DATABASE_URL)
@@ -40,7 +40,7 @@ DATABASES = {
         'USER': tmpPostgres.username,
         'PASSWORD': tmpPostgres.password,
         'HOST': tmpPostgres.hostname,
-        'PORT': 5432,
+        'PORT': tmpPostgres.port or 5432,
     }
 }
 
