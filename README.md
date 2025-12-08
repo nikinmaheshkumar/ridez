@@ -123,41 +123,11 @@
    ```
    The frontend will be available at `http://localhost:5173`
 
-### 3️⃣ ORS Proxy Setup (Optional)
-
-The ORS proxy is used to handle OpenRouteService API requests. If you want to use it:
-
-1. **Navigate to the ors-proxy directory**
-   ```bash
-   cd ors-proxy
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Set up environment variables**
-   - Copy the `.env.example` file to `.env`:
-     ```bash
-     cp .env.example .env
-     ```
-   - Add your OpenRouteService API key:
-     ```env
-     ORS_API_KEY=your_ors_api_key_here
-     PORT=3000
-     ```
-
-4. **Start the proxy server**
-   ```bash
-   npm start
-   ```
-   The proxy will be available at `http://localhost:3000`
-
 ### 📝 Additional Notes
 
-- **Database**: By default, the backend uses SQLite for local development. To use PostgreSQL, set the `DATABASE_URL` environment variable in the backend `.env` file.
-- **API Key**: You need an OpenRouteService API key for location features. Get one free at https://openrouteservice.org/
+- **Database**: By default, the backend uses SQLite for local development. To use PostgreSQL, set the `DATABASE_URL` environment variable in the backend `.env` file (format: `postgresql://username:password@localhost:5432/dbname`).
+- **API Key**: You need an OpenRouteService API key for location features. Add it to the backend `.env` file. Get one free at https://openrouteservice.org/
+- **ORS Proxy**: The backend includes a built-in OpenRouteService proxy at `/api/ors/`, so you don't need to run a separate proxy server.
 - **CORS**: The backend is configured to allow requests from `localhost:5173` by default.
 - **Admin Panel**: Access the Django admin at `http://localhost:8000/admin` after creating a superuser.
 
