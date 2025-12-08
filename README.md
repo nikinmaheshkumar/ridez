@@ -41,22 +41,102 @@
 
 ## 🚀 How to Run Locally
 
-### Backend (Django)
-```bash
-cd backend/
-python -m venv env
-source env/bin/activate    # Windows: env\Scripts\activate
-pip install -r requirements.txt
-python manage.py migrate
-python manage.py runserver
-```
+### Prerequisites
+- Python 3.8+
+- Node.js 14+
+- **PostgreSQL** (required)
+- OpenRouteService API key (get one free at https://openrouteservice.org/)
 
-### Frontend (React)
-```bash
-cd frontend/
-npm install
-npm run dev
-```
+### 1️⃣ Backend Setup (Django)
+
+1. **Set up PostgreSQL database**
+   ```bash
+   # Create a PostgreSQL database
+   createdb ridez_db
+   # Or use your preferred method to create a database
+   ```
+
+2. **Navigate to the Backend directory**
+   ```bash
+   cd Backend/ridez
+   ```
+
+3. **Create and activate a virtual environment**
+   ```bash
+   python -m venv env
+   source env/bin/activate    # Windows: env\Scripts\activate
+   ```
+
+4. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+5. **Set up environment variables**
+   - Copy the `.env.example` file to `.env`:
+     ```bash
+     cp .env.example .env
+     ```
+   - Edit `.env` and add your configuration:
+     ```env
+     SECRET_KEY=your-secret-key-here
+     DEBUG=True
+     DATABASE_URL=postgresql://username:password@localhost:5432/ridez_db
+     ORS_API_KEY=your_ors_api_key_here
+     ```
+   - **Note**: `DATABASE_URL` is **required** and must point to your PostgreSQL database.
+
+6. **Run database migrations**
+   ```bash
+   python manage.py migrate
+   ```
+
+7. **Create a superuser (optional, for admin access)**
+   ```bash
+   python manage.py createsuperuser
+   ```
+
+8. **Start the development server**
+   ```bash
+   python manage.py runserver
+   ```
+   The backend will be available at `http://localhost:8000`
+
+### 2️⃣ Frontend Setup (React + Vite)
+
+1. **Navigate to the Frontend directory**
+   ```bash
+   cd Frontend
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+   - Copy the `.env.example` file to `.env`:
+     ```bash
+     cp .env.example .env
+     ```
+   - The default configuration should work:
+     ```env
+     VITE_API_BASE_URL=http://localhost:8000/api
+     ```
+
+4. **Start the development server**
+   ```bash
+   npm run dev
+   ```
+   The frontend will be available at `http://localhost:5173`
+
+### 📝 Additional Notes
+
+- **Database**: PostgreSQL is required. Set the `DATABASE_URL` environment variable in the backend `.env` file (format: `postgresql://username:password@localhost:5432/dbname`).
+- **API Key**: You need an OpenRouteService API key for location features. Add it to the backend `.env` file. Get one free at https://openrouteservice.org/
+- **ORS Proxy**: The backend includes a built-in OpenRouteService proxy at `/api/ors/`, so you don't need to run a separate proxy server.
+- **CORS**: The backend is configured to allow requests from `localhost:5173` by default.
+- **Admin Panel**: Access the Django admin at `http://localhost:8000/admin` after creating a superuser.
 
 ---
 

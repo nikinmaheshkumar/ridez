@@ -19,8 +19,19 @@ from urllib.parse import urlparse
 
 load_dotenv()
 
-# Replace the DATABASES section of your settings.py with this
-tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Database configuration - PostgreSQL required
+DATABASE_URL = os.getenv("DATABASE_URL")
+if not DATABASE_URL:
+    raise ValueError(
+        "DATABASE_URL environment variable is required. "
+        "Please set it in your .env file. "
+        "Example: DATABASE_URL=postgresql://username:password@localhost:5432/ridez_db"
+    )
+
+tmpPostgres = urlparse(DATABASE_URL)
 
 DATABASES = {
     'default': {
@@ -29,24 +40,25 @@ DATABASES = {
         'USER': tmpPostgres.username,
         'PASSWORD': tmpPostgres.password,
         'HOST': tmpPostgres.hostname,
-        'PORT': 5432,
+        'PORT': tmpPostgres.port or 5432,
     }
 }
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-local-dev-key-change-in-production")
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.getenv("DEBUG", "True") == "True"
 
 ALLOWED_HOSTS = ['ridez.onrender.com', 'ridez.netlify.app', 'localhost', '127.0.0.1']
+
+# OpenRouteService API Key
+ORS_API_KEY = os.getenv('ORS_API_KEY', '')
 
 
 
@@ -98,12 +110,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'ridez.wsgi.application'
-
-ORS_API_KEY = os.getenv('ORS_API_KEY')
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-
 
 
 # Password validation

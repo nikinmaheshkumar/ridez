@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import api from "../../services/api";
-import axios from "axios";
 import { MdLocationPin } from "react-icons/md";
 import { FaFlagCheckered } from "react-icons/fa";
 import { toast } from "react-toastify";
@@ -31,9 +30,9 @@ function BookRides() {
     const fetchSuggestions = async (text, setter) => {
         if (!text.trim()) return setter([]);
         try {
-            const res = await axios.get("https://api.openrouteservice.org/geocode/autocomplete", {
+            const res = await api.get("/ors/", {
                 params: {
-                    api_key: import.meta.env.VITE_GEO_API_KEY,
+                    endpoint: "geocode/autocomplete",
                     text,
                     "boundary.country": "in",
                 },
@@ -89,14 +88,9 @@ function BookRides() {
         }
 
         try {
-            const response = await axios.post("https://api.openrouteservice.org/v2/directions/driving-car/json", {
+            const response = await api.post("/ors/?endpoint=v2/directions/driving-car/json", {
                 coordinates: [pickCoords, dropCoords],
                 units: "km",
-            }, {
-                headers: {
-                    Authorization: import.meta.env.VITE_GEO_API_KEY,
-                    "Content-Type": "application/json",
-                },
             });
 
             const route = response.data.routes[0];
